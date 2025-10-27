@@ -1,0 +1,32 @@
+meta {
+  name: Lines / Update
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base_url}}/panel/lines/1/update
+  body: json
+  auth: inherit
+}
+
+headers {
+  Client-Token: {{client_token}}
+}
+
+body:json {
+  {
+      "provider_id" : 1,
+      "number" : "10000900000",
+      "description" : "kavenegar",
+      "is_active" : true,
+      "is_default" : true,
+      "is_receivable" : false   
+      
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

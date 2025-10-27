@@ -1,0 +1,127 @@
+openapi: 3.0.3
+info:
+  title: SMS API
+  version: 1.0.0
+  description: API for sending SMS messages.
+servers:
+  - url: http://notification.local/api
+paths:
+  /sms/send:
+    post:
+      summary: Send an SMS
+      tags:
+        - SMS
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - mobile
+                - message
+                - expired_at
+              properties:
+                provider:
+                  type: string
+                  nullable: true
+                  description: Provider slug (must exist in `providers` table)
+                  example: mtn
+                line:
+                  type: string
+                  nullable: true
+                  description: SMS line ID (numeric)
+                  example: "10001"
+                mobile:
+                  type: string
+                  description: Recipient mobile number
+                  example: "989120000000"
+                message:
+                  type: string
+                  minLength: 10
+                  maxLength: 255
+                  description: SMS message body
+                  example: "Hello, your verification code is 1234."
+                due_at:
+                  type: string
+                  format: date-time
+                  nullable: true
+                  description: Scheduled time for sending the SMS
+                  example: "2025-08-25T10:00:00Z"
+                expired_at:
+                  type: string
+                  format: date-time
+                  description: Expiration time for the SMS
+                  example: "2025-08-30T23:59:59Z"
+                is_active:
+                  type: boolean
+                  default: false
+                  description: Whether the SMS is active
+                  example: true
+      responses:
+        "200":
+          description: SMS successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  value:
+                    type: object
+                    properties:
+                      sms:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 123
+                          department_id:
+                            type: integer
+                            example: 5
+                          clientId:
+                            type: integer
+                            example: 42
+                          provider_id:
+                            type: integer
+                            example: 3
+                          mobile:
+                            type: string
+                            example: "989120000000"
+                          message:
+                            type: string
+                            example: "Hello, your verification code is 1234."
+                          line_id:
+                            type: integer
+                            example: 10001
+                          status:
+                            type: string
+                            enum: [ pending, sent, failed ]
+                            example: pending
+                          due_at:
+                            type: string
+                            format: date-time
+                            example: "2025-08-25T10:00:00Z"
+                          expired_at:
+                            type: string
+                            format: date-time
+                            example: "2025-08-30T23:59:59Z"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: The given data was invalid.
+                  errors:
+                    type: object
+                    example:
+                      mobile:
+                        - The mobile field is required.
+                      message:
+                        - The message must be at least 10 characters.

@@ -1,0 +1,26 @@
+meta {
+  name: Clients / Update
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/panel/clients/1/update
+  body: json
+  auth: inherit
+}
+
+headers {
+  Client-Token: {{client_token}}
+}
+
+body:json {
+  {
+      "department_id": 1,
+      "name": "Panel Client"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

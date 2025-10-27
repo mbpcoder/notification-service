@@ -1,0 +1,36 @@
+meta {
+  name: Login
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/panel/auth/login
+  body: json
+  auth: inherit
+}
+
+headers {
+  Client-Token: {{client_token}}
+}
+
+body:json {
+  {
+      "username" : "abc",
+      "password" : "123456"
+  
+  }
+}
+
+script:post-response {
+  if (res.getStatus() === 200) {
+      let responseData = res.getBody();
+      const rememberToken = responseData.value.user.remember_token;
+      bru.setEnvVar("auth_token", rememberToken);
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

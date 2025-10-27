@@ -1,0 +1,30 @@
+meta {
+  name: Cleints / Store
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base_url}}/panel/clients/store
+  body: json
+  auth: inherit
+}
+
+headers {
+  Client-Token: {{client_token}}
+}
+
+body:json {
+  {
+      "department_id": 1,
+      "name": "HR Departman",
+      "token": "asdahbsvdhbashjBHasdasdasdjnskadnas565",
+      "is_active": true,
+      "expired_at": null
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

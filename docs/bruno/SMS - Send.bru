@@ -1,0 +1,29 @@
+meta {
+  name: SMS / Send
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base_url}}/api/sms/send
+  body: json
+  auth: inherit
+}
+
+headers {
+  Accept: application/json
+  Client-Token: {{client_token}}
+}
+
+body:json {
+  {
+      "provider": "NeginErtebat",
+      "mobile": "09120000000",
+      "message": "Good morning!",
+      "expired_at": "2025-12-10"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

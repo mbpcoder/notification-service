@@ -1,0 +1,25 @@
+meta {
+  name: Clients / Revoke Token
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{base_url}}/panel/clients/1/revoke-token
+  body: json
+  auth: inherit
+}
+
+headers {
+  Client-Token: {{client_token}}
+}
+
+body:json {
+  {
+      
+  }
+}
+
+settings {
+  encodeUrl: true
+}

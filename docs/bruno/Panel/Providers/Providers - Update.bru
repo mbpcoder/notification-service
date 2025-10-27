@@ -1,0 +1,31 @@
+meta {
+  name: Providers / Update
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/panel/providers/1/update
+  body: json
+  auth: inherit
+}
+
+headers {
+  Client-Token: {{client_token}}
+}
+
+body:json {
+  {
+      "name" : "KaveNegar Company",
+      "class_name" : "Kavenegar",
+      "slug" : "Kavenegar",
+      "url" : "https://kavenegar.com",
+      "is_active" : true,
+      "is_default" : true    
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

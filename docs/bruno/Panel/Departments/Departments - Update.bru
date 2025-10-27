@@ -1,0 +1,27 @@
+meta {
+  name: Departments / Update
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base_url}}/panel/departments/2/update
+  body: json
+  auth: inherit
+}
+
+headers {
+  Client-Token: {{client_token}}
+}
+
+body:json {
+  {
+      "name" : "Financial"
+      
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
