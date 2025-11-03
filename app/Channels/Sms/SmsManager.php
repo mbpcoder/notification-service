@@ -18,6 +18,11 @@ class SmsManager
         return $this->driver->send($smsMessage);
     }
 
+    public function parseStatusUpdateWebhook(array $data)
+    {
+        return $this->driver->parseStatusUpdateWebhook($data);
+    }
+
     private function getDriver(SmsProvider $smsProvider): ISmsDriver
     {
         $className = $smsProvider->className ?? ucfirst((string)config('channels.notification.sms.driver'));
