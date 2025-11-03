@@ -1,8 +1,16 @@
 <?php
 
+use App\Contracts\ApplicationClientInterface;
+
 function myDate(): \Pasoonate\Calendars\CalendarManager
 {
     return app(\App\Helpers\JDate::class)->calenndar;
+}
+
+function apiClient(): \App\Data\Entities\Client
+{
+    $apiClient = app(ApplicationClientInterface::class);
+    return $apiClient->client();
 }
 
 function authClient()
@@ -85,4 +93,16 @@ function convertToEnglishNumbers(string $string): string
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
         ],
         $string);
+}
+
+function generateToken($length = 64): string
+{
+    $possibleChars = '123456789abcdefghikmnopqrstyxwz';
+    $possibleCharsIndex = strlen($possibleChars) - 1;
+
+    $rndString = '';
+    for ($i = 0; $i < $length; $i++) {
+        $rndString .= $possibleChars[rand(0, $possibleCharsIndex)];
+    }
+    return $rndString;
 }
