@@ -54,7 +54,7 @@ class CredentialRepository implements ICredentialRepository
         return $entities;
     }
 
-    public function getAllByProviderIdsAndLineIds(array $providerIds, array $lineIds): Collection
+    public function getAllByProviderIdsOrLineIds(array $providerIds, array $lineIds): Collection
     {
         $cacheKey = $this->redisRepository->makeKey([
             'function_name' => 'getAllByIds',
@@ -65,7 +65,7 @@ class CredentialRepository implements ICredentialRepository
         $entities = $this->redisRepository->get($cacheKey);
 
         if ($entities === null) {
-            $entities = $this->repository->getAllByProviderIdsAndLineIds($providerIds, $lineIds);
+            $entities = $this->repository->getAllByProviderIdsOrLineIds($providerIds, $lineIds);
             $this->redisRepository->put($cacheKey, $entities);
         }
 

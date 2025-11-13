@@ -35,6 +35,11 @@ readonly class SmsRepository implements ISmsRepository
         return $this->repository->getAllReadyToSendSms($limit);
     }
 
+    public function getAllReadyToSendSmsByProviderId(int $providerId, int $limit = 50): Collection
+    {
+        return $this->repository->getAllReadyToSendSmsByProviderId($providerId, $limit);
+    }
+
     public function getAll(int $offset, int $count): array
     {
         return $this->repository->getAll($offset, $count);

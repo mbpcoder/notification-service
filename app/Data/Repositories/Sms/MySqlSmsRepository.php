@@ -71,6 +71,25 @@ class MySqlSmsRepository extends MySqlRepository implements ISmsRepository
         return $this->factory->makeCollectionOfEntities($allSms);
     }
 
+    public function getAllReadyToSendSmsByProviderId(int $providerId, int $limit = 50): Collection
+    {
+        $now = $this->now();
+
+        $allSms = $this->newQuery()
+            ->where('provider_id', $providerId)
+            ->where('status', SmsStatusEnum::PENDING->value)
+            ->where(function ($query) use ($now) {
+                $query->whereNull('due_at')
+                    ->orWhere('due_at', '<', $now);
+            })
+            ->where('expired_at', '>', $now)
+            ->orderBy('retry_count', OrderDirectionEnum::ASC->value)
+            ->limit($limit)
+            ->get();
+
+        return $this->factory->makeCollectionOfEntities($allSms);
+    }
+
     public function create(Sms $sms): Sms
     {
         $now = $this->now();

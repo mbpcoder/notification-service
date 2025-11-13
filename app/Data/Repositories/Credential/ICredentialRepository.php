@@ -11,7 +11,7 @@ interface ICredentialRepository
 
     public function getAllByIds(array $ids): Collection;
 
-    public function getAllByProviderIdsAndLineIds(array $providerIds, array $lineIds): Collection;
+    public function getAllByProviderIdsOrLineIds(array $providerIds, array $lineIds): Collection;
 
     public function create(Credential $credential): Credential;
 

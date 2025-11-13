@@ -14,6 +14,8 @@ interface ISmsRepository
 
     public function getAllReadyToSendSms(int $limit = 50): Collection;
 
+    public function getAllReadyToSendSmsByProviderId(int $providerId, int $limit = 50): Collection;
+
     public function create(Sms $sms): Sms;
 
     public function update(Sms $sms): int;

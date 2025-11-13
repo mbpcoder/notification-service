@@ -101,7 +101,7 @@ class SmsController extends Controller
 
         $sms = $this->smsRepository->create($sms);
 
-        $credential = $this->credentialRepository->getAllByProviderIdsAndLineIds([$provider->id], [$line->id])->first();
+        $credential = $this->credentialRepository->getAllByProviderIdsOrLineIds([$provider->id], [$line->id])->first();
 
         dispatch(new SendSmsJob($sms, $provider, $line, $credential));
 

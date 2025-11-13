@@ -38,7 +38,7 @@ class MySqlCredentialRepository extends MySqlRepository implements ICredentialRe
         return $this->factory->makeCollectionOfEntities($credential);
     }
 
-    public function getAllByProviderIdsAndLineIds(array $providerIds, array $lineIds): Collection
+    public function getAllByProviderIdsOrLineIds(array $providerIds, array $lineIds): Collection
     {
         $entities = $this->newQuery()
             ->where(function ($query) use ($providerIds) {
