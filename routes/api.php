@@ -12,6 +12,7 @@ Route::get('/user', function (Request $request) {
 Route::middleware(AppMiddleware::class)->group(function () {
     Route::prefix('/sms')->group(function () {
         Route::post('/send', [SmsController::class, 'send']);
+        Route::post('/send-bulk', [SmsController::class, 'sendBulkSms']);
         Route::post('/send-otp', [SmsController::class, 'sendOtp']);
     });
 });

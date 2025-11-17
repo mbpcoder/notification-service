@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Data\Entities\Sms;
 use App\Data\Enums\HttpStatusEnum;
 use App\Data\Enums\SmsStatusEnum;
+use App\Data\Factories\SmsFactory;
 use App\Data\Repositories\Credential\CredentialRepository;
 use App\Data\Repositories\Sms\SmsRepository;
 use App\Data\Resources\SmsResource;
 use App\Exceptions\EntityNotFoundException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\SendBulkSmsRequest;
 use App\Http\Requests\Api\SendSmsOTPRequest;
 use App\Http\Requests\Api\SendSmsRequest;
 use App\Http\Responses\Response;
@@ -17,6 +19,7 @@ use App\Jobs\SendSmsJob;
 use App\Services\LimitationService;
 use App\Services\LineService;
 use App\Services\ProviderService;
+use Illuminate\Http\JsonResponse;
 use Random\RandomException;
 
 class SmsController extends Controller
@@ -65,6 +68,30 @@ class SmsController extends Controller
 
         $this->response->code = HttpStatusEnum::OK;
         $this->response->value->add('sms', $this->smsResource->toArray($sms));
+        return $this->response->toJson();
+    }
+
+    /**
+     * @throws EntityNotFoundException
+     */
+    public function sendBulkSms(SendBulkSmsRequest $request, SmsFactory $smsFactory): JsonResponse
+    {
+        $provider = $this->providerService->getProvider($request->sendBulkSmsDto->provider);
+        $line = $this->lineService->getLine($provider->id, $request->sendBulkSmsDto->line);
+
+        $bulkSms = $smsFactory->makeCollectionFromBulkDto($request->sendBulkSmsDto, $provider->id, $line->id);
+
+//        if (!$this->limitationService->isWithinLimit($bulkSms)) {
+//            $this->response->code = HttpStatusEnum::FORBIDDEN;
+//            $this->response->message = __('Limit Exceeded');
+//            return $this->response->toJson();
+//        }
+
+        $this->smsRepository->bulkInsert($bulkSms);
+
+        $this->response->code = HttpStatusEnum::OK;
+        $this->response->value->add('sms_count', $bulkSms->count());
+
         return $this->response->toJson();
     }
 

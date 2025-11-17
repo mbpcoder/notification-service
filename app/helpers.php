@@ -2,6 +2,82 @@
 
 use App\Contracts\ApplicationClientInterface;
 
+if (!function_exists('toBoolean')) {
+    /**
+     * Convert a value to a boolean.
+     *
+     * @param mixed $value
+     * @return bool|null
+     */
+    function toBoolean(mixed $value): bool|null
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        if (is_bool($value)) {
+            return $value;
+        }
+
+        if (is_string($value)) {
+            $value = strtolower(trim($value));
+        }
+
+        // Map known truthy / falsy values
+        return in_array($value, [true, 1, '1', 'true', 'yes', 'on'], true);
+    }
+}
+
+if (!function_exists('toDateTime')) {
+    /**
+     * Convert a value to a DateTime object.
+     *
+     * @param mixed $value
+     * @param DateTimeZone|string|null $timezone Default: app timezone
+     *
+     * @return DateTime|null  Returns null on failure
+     * @throws Exception
+     */
+    function toDateTime(mixed $value, mixed $timezone = null): DateTime|null
+    {
+        // Return null early
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        // Already a DateTime or Carbon instance
+        if ($value instanceof DateTime) {
+            return $value;
+        }
+
+        // Carbon is a DateTime subclass – widely used in Laravel
+        if ($value instanceof Carbon) {
+            return $value;
+        }
+
+        // Handle timestamps (int)
+        if (is_numeric($value)) {
+            $dt = new DateTime();
+            $dt->setTimestamp((int)$value);
+            return $dt;
+        }
+
+        // Resolve timezone
+        $timezone = $timezone ?? config('app.timezone');
+        if (is_string($timezone)) {
+            $timezone = new DateTimeZone($timezone);
+        }
+
+        try {
+            // Let PHP + Carbon do the heavy lifting
+            return Carbon::parse($value, $timezone);
+        } catch (Exception $e) {
+            // Invalid date string
+            return null;
+        }
+    }
+}
+
 function myDate(): \Pasoonate\Calendars\CalendarManager
 {
     return app(\App\Helpers\JDate::class)->calenndar;

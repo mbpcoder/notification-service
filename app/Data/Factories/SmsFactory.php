@@ -2,8 +2,10 @@
 
 namespace App\Data\Factories;
 
+use App\Data\DataTransferObject\SendBulkSmsDto;
 use App\Data\Entities\Sms;
 use App\Data\Enums\SmsStatusEnum;
+use Illuminate\Support\Collection;
 use stdClass;
 
 class SmsFactory extends Factory
@@ -34,5 +36,30 @@ class SmsFactory extends Factory
         $sms->updatedAt = $entity->updated_at;
 
         return $sms;
+    }
+
+    public function makeCollectionFromBulkDto(SendBulkSmsDto $sendBulkSmsDto, int $providerId, int $lineId): Collection
+    {
+        $bulkSms = collect();
+        $apiClient = apiClient();
+
+        foreach ($sendBulkSmsDto->mobileList as $_mobile) {
+
+            $sms = new Sms();
+
+            $sms->departmentId = $apiClient->departmentId;
+            $sms->clientId = $apiClient->id;
+            $sms->providerId = $providerId;
+            $sms->mobile = $_mobile;
+            $sms->message = $sendBulkSmsDto->message;
+            $sms->lineId = $lineId;
+            $sms->status = SmsStatusEnum::PENDING;
+            $sms->dueAt = $sendBulkSmsDto->dueAt?->format('Y-m-d H:i:s');
+            $sms->expiredAt = $sendBulkSmsDto->expiredAt->format('Y-m-d H:i:s');
+
+            $bulkSms->push($sms);
+        }
+
+        return $bulkSms;
     }
 }

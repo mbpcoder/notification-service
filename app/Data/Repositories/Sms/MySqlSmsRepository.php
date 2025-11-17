@@ -124,6 +124,39 @@ class MySqlSmsRepository extends MySqlRepository implements ISmsRepository
         return $sms;
     }
 
+    public function bulkInsert(Collection|array $bulkSms): bool
+    {
+        $now = $this->now();
+
+        $records = [];
+
+        foreach ($bulkSms as $sms) {
+
+            $records[] = [
+                'department_id' => $sms->departmentId,
+                'client_id' => $sms->clientId,
+                'provider_id' => $sms->providerId,
+                'line_id' => $sms->lineId,
+                'mobile' => $sms->mobile,
+                'template_name' => $sms->templateName,
+                'template_parameter1' => $sms->templateParameter1 ?? null,
+                'template_parameter2' => $sms->templateParameter2 ?? null,
+                'template_parameter3' => $sms->templateParameter3 ?? null,
+                'template_parameter4' => $sms->templateParameter4 ?? null,
+                'message' => $sms->message,
+                'retry_count' => $sms->retryCount ?? 1,
+                'status' => $sms->status->value,
+                'due_at' => $sms->dueAt,
+                'sent_at' => $sms->sentAt ?? null,
+                'delivered_at' => $sms->deliveredAt ?? null,
+                'expired_at' => $sms->expiredAt,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
+        }
+        return $this->newQuery()->insert($records);
+    }
+
     public function update(Sms $sms): int
     {
         $sms->updatedAt = $this->now();

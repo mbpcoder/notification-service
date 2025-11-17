@@ -1,0 +1,33 @@
+meta {
+  name: SMS / Bulk Send
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{base_url}}/api/sms/send-bulk
+  body: json
+  auth: inherit
+}
+
+headers {
+  Accept: application/json
+  Client-Token: {{client_token}}
+}
+
+body:json {
+  {
+      "provider": "NeginErtebat",
+      "mobile_list": [
+        "09120000000",
+        "09150000000"
+      ],
+      "message": "Good morning!",
+      "expired_at": "2025-12-10"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

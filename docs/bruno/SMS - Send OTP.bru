@@ -1,0 +1,28 @@
+meta {
+  name: SMS / Send OTP
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{base_url}}/api/sms/send-otp
+  body: json
+  auth: inherit
+}
+
+headers {
+  Accept: application/json
+  Client-Token: {{client_token}}
+}
+
+body:json {
+  {
+      "provider": "NeginErtebat",
+      "mobile": "09120000000"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
