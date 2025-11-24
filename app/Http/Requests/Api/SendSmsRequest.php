@@ -31,7 +31,7 @@ class SendSmsRequest extends BaseRequest
         $this->provider = $this->input('provider');
         $this->line = $this->input('line');
         $this->mobile = $this->input('mobile');
-        $this->message = $this->input('message');
+        $this->message = trim($this->input('message'));
         $this->dueAt = $this->input('due_at');
         $this->isActive = $this->get('is_active', false);
         $this->expiredAt = $this->input('expired_at');

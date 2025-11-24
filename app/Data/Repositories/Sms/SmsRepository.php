@@ -50,7 +50,7 @@ readonly class SmsRepository implements ISmsRepository
         return $this->repository->create($sms);
     }
 
-    public function bulkInsert(array $bulkSms)
+    public function bulkInsert(Collection|array $bulkSms): bool
     {
         return $this->repository->bulkInsert($bulkSms);
     }

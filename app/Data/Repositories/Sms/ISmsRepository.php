@@ -18,6 +18,8 @@ interface ISmsRepository
 
     public function create(Sms $sms): Sms;
 
+    public function bulkInsert(Collection|array $bulkSms): bool;
+
     public function update(Sms $sms): int;
 
 }

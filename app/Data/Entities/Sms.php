@@ -14,6 +14,7 @@ class Sms extends Entity
 
     public int $providerId;
     public int $lineId;
+    public int|null $messageId = null;
 
     public string $mobile;
 
@@ -26,8 +27,6 @@ class Sms extends Entity
     public null|string $templateParameter3 = null;
 
     public null|string $templateParameter4 = null;
-
-    public string $message;
 
     public int $retryCount = 0;
 

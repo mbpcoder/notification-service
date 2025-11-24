@@ -6,6 +6,7 @@ use App\Http\Controllers\Panel\ClientsController;
 use App\Http\Controllers\Panel\CredentialsController;
 use App\Http\Controllers\Panel\DepartmentsController;
 use App\Http\Controllers\Panel\LinesController;
+use App\Http\Controllers\Panel\MessagesController;
 use App\Http\Controllers\Panel\ProvidersController;
 use App\Http\Controllers\Panel\SmsController;
 use App\Http\Controllers\Panel\UsersController;
@@ -48,6 +49,12 @@ Route::middleware(AppMiddleware::class)->group(function () {
             Route::post('/{id}/update', 'update')->name('update');
         });
 
+    Route::prefix('/messages')
+        ->controller(MessagesController::class)
+        ->name('messages.')
+        ->group(function () {
+            Route::post('/list', 'list')->name('list');
+        });
 
     Route::prefix('/sms')
         ->controller(SmsController::class)
@@ -68,7 +75,8 @@ Route::middleware(AppMiddleware::class)->group(function () {
 
     Route::prefix('/clients')
         ->controller(ClientsController::class)
-        ->name('clients.')->group(function () {
+        ->name('clients.')
+        ->group(function () {
             Route::post('/list', 'list')->name('list');
             Route::post('/store', 'store')->name('store');
             Route::post('/{id}/update', 'update')->name('update');

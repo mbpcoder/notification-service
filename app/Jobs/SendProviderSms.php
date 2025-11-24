@@ -6,6 +6,7 @@ use App\Data\Entities\Provider;
 use App\Data\Enums\CredentialEntityEnum;
 use App\Data\Repositories\Credential\CredentialRepository;
 use App\Data\Repositories\Line\LineRepository;
+use App\Data\Repositories\Message\MessageRepository;
 use App\Data\Repositories\Sms\SmsRepository;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -31,6 +32,7 @@ class SendProviderSms implements ShouldQueue
         SmsRepository        $smsRepository,
         LineRepository       $lineRepository,
         CredentialRepository $credentialRepository,
+        MessageRepository $messageRepository,
     ): void
     {
         $allSms = $smsRepository->getAllReadyToSendSmsByProviderId($this->provider->id);
@@ -38,6 +40,9 @@ class SendProviderSms implements ShouldQueue
         if ($allSms->count() === 0) {
             return;
         }
+
+        $messageIds = $allSms->pluck('messageId')->filter()->unique()->toArray();
+        $messages = $messageRepository->getAllByIds($messageIds)->keyBy('id');
 
         $lineIds = $allSms->pluck('lineId')->filter()->unique()->toArray();
         $lines = $lineRepository->getAllByIds($lineIds)->keyBy('id');
@@ -51,7 +56,7 @@ class SendProviderSms implements ShouldQueue
 
         foreach ($allSms as $sms) {
             $credential = $credentials['line' . $sms->lineId] ?? $providerCredential;
-            dispatch(new SendSmsJob($sms, $this->provider, $lines[$sms->lineId] ?? null, $credential));
+            dispatch(new SendSmsJob($sms, $messages[$sms->messageId], $this->provider, $lines[$sms->lineId] ?? null, $credential));
         }
     }
 }

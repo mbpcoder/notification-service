@@ -19,13 +19,13 @@ class SmsFactory extends Factory
         $sms->clientId = $entity->client_id;
         $sms->providerId = $entity->provider_id;
         $sms->lineId = $entity->line_id;
+        $sms->messageId = $entity->message_id;
         $sms->mobile = $entity->mobile;
         $sms->templateName = $entity->template_name;
         $sms->templateParameter1 = $entity->template_parameter1;
         $sms->templateParameter2 = $entity->template_parameter2;
         $sms->templateParameter3 = $entity->template_parameter3;
         $sms->templateParameter4 = $entity->template_parameter4;
-        $sms->message = $entity->message;
         $sms->retryCount = $entity->retry_count;
         $sms->status = SmsStatusEnum::from($entity->status);
         $sms->dueAt = $entity->due_at;
@@ -38,7 +38,7 @@ class SmsFactory extends Factory
         return $sms;
     }
 
-    public function makeCollectionFromBulkDto(SendBulkSmsDto $sendBulkSmsDto, int $providerId, int $lineId): Collection
+    public function makeCollectionFromBulkDto(SendBulkSmsDto $sendBulkSmsDto, int $providerId, int $lineId, int $messageId): Collection
     {
         $bulkSms = collect();
         $apiClient = apiClient();
@@ -49,9 +49,9 @@ class SmsFactory extends Factory
 
             $sms->departmentId = $apiClient->departmentId;
             $sms->clientId = $apiClient->id;
+            $sms->messageId = $messageId;
             $sms->providerId = $providerId;
             $sms->mobile = $_mobile;
-            $sms->message = $sendBulkSmsDto->message;
             $sms->lineId = $lineId;
             $sms->status = SmsStatusEnum::PENDING;
             $sms->dueAt = $sendBulkSmsDto->dueAt?->format('Y-m-d H:i:s');

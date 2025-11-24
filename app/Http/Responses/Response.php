@@ -61,6 +61,6 @@ class Response implements Jsonable
      */
     public function toJson($options = 0): JsonResponse
     {
-        return response()->json($this->toArray(), $this->code->value);
+        return response()->json($this->toArray(), $this->code->value, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
 }

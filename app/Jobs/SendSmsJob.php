@@ -7,6 +7,7 @@ use App\Channels\Sms\SmsMessage;
 use App\Channels\Sms\SmsProvider;
 use App\Data\Entities\Credential;
 use App\Data\Entities\Line;
+use App\Data\Entities\Message;
 use App\Data\Entities\Provider;
 use App\Data\Entities\Sms;
 use App\Data\Entities\SmsAttempt;
@@ -23,9 +24,9 @@ class SendSmsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-
     public function __construct(
-        private Sms                      $sms,
+        private readonly Sms     $sms,
+        private readonly Message $message,
         private readonly Provider|null   $provider,
         private readonly Line|null       $line,
         private readonly Credential|null $credential
@@ -34,9 +35,6 @@ class SendSmsJob implements ShouldQueue
 
     }
 
-    /**
-     * Execute the job.
-     */
     public function handle(): void
     {
         /**
@@ -59,7 +57,7 @@ class SendSmsJob implements ShouldQueue
         $smsMessage = new SmsMessage();
         $smsMessage->from = $this->line->number ?? null;
         $smsMessage->to = $this->sms->mobile;
-        $smsMessage->content = $this->sms->message;
+        $smsMessage->content = $this->message->content;
 
         $smsChannel = new SmsManager($smsProvider);
         $smsResponse = $smsChannel->send($smsMessage);
